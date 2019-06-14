@@ -2,12 +2,12 @@
  * Created by lintao_alex on 2019/2/27
  */
 namespace Dream.common {
-    export interface IDispose {
-        dispose(): void;
+    export interface IClear {
+        clear(): void;
     }
 
-    export interface IClear extends IDispose {
-        clear(): void;
+    export interface IDispose extends IClear {
+        dispose(): void;
     }
 
     export interface IClassIdentify<T> {
