@@ -15,15 +15,6 @@ namespace Dream.common {
         new(...args: any[]): T;
     }
 
-    export interface ISpecifyKV {
-        //若需递归，以'.'分隔属性名
-        keys: string;
-        value: any;
-    }
-
-    export interface ICallback {
-        callback: Function;
-        callObj?: any;
-        args?: any[];
-    }
+    //若需递归，以'.'分隔属性名
+    export type ISpecifyKV = [string, any];
 }

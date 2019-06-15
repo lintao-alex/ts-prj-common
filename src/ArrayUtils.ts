@@ -129,11 +129,11 @@ namespace Dream.common {
             if (!element) return false;
             for (let i = 0, len = KVList.length; i < len; ++i) {
                 let kvItem = KVList[i];
-                let key = kvItem.keys;
+                let key = kvItem[0];
                 if (key.indexOf('.') < 0) {
-                    if (element[key] != kvItem.value) return false
+                    if (element[key] != kvItem[1]) return false
                 } else {
-                    if (!this.checkElementMultiKv(element, key, kvItem.value)) return false
+                    if (!this.checkElementMultiKv(element, key, kvItem[1])) return false
                 }
             }
             return true;
