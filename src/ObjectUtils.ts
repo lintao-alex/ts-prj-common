@@ -13,6 +13,10 @@ namespace Dream.common {
             return propertyList.some(name => obj.hasOwnProperty(name));
         }
 
+        static getValue(obj: any, key: string){
+            return obj[key];
+        }
+
         static getValueByPointKey(obj: any, keys: string): any | undefined {
             let keyList = keys.split('.');
             return this.getValueByKeyList(obj, keyList)

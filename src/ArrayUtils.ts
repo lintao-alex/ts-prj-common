@@ -144,7 +144,15 @@ namespace Dream.common {
             return eValue == value;
         }
 
-        public static search<T>(target: Array<T>, ...KVList: ISpecifyKV[]): T {
+        static find<T>(target: Array<T>, check: (data: T) => boolean, thisObj?: any): T {
+            for (let i = target.length - 1; i >= 0; --i) {
+                let data = target[i];
+                if (check.call(thisObj, data)) return data;
+            }
+            return null;
+        }
+
+        static search<T>(target: Array<T>, ...KVList: ISpecifyKV[]): T {
             for (let i = target.length - 1; i >= 0; i--) {
                 let element = target[i];
                 if (this.checkElementKv(element, KVList)) {
@@ -154,7 +162,7 @@ namespace Dream.common {
             return null;
         }
 
-        public static getElementIndex(target: Array<any>, ...KVList: ISpecifyKV[]): number {
+        static getElementIndex(target: Array<any>, ...KVList: ISpecifyKV[]): number {
             for (let i = target.length - 1; i >= 0; i--) {
                 if (this.checkElementKv(target[i], KVList)) {
                     return i;
@@ -163,7 +171,7 @@ namespace Dream.common {
             return -1;
         }
 
-        public static getRandomElement<T>(list: Array<T>): T {
+        static getRandomElement<T>(list: Array<T>): T {
             let listLen = list.length;
             if (listLen == 0) {
                 return null;
@@ -183,6 +191,45 @@ namespace Dream.common {
                 }
             }
             list.length = insertIdx;
+        }
+
+        /**
+         * 将两个数组中的元素按指定的Key对应起来
+         * @param listA
+         * @param keyA 支持.
+         * @param listB
+         * @param keyB 支持.
+         * @param doMap
+         * @param thisObj
+         */
+        static mapTwoList<A, B>(listA: A[], keyA: string, listB: B[], keyB: string, doMap: (a: A, b: B) => void, thisObj?: any) {
+            let map = new Map<any, A>();
+            let getKeyAFuc: { (obj: A): any };
+            if (keyA.indexOf('.') < 0) {
+                getKeyAFuc = (obj: A) => obj[keyA];
+            } else {
+                let keys = keyA.split('.');
+                let fuc = ObjectUtils.getValueByKeyList;
+                getKeyAFuc = (obj: A) => fuc(obj, keys);
+            }
+            for (let i = listA.length - 1; i >= 0; --i) {
+                let a = listA[i];
+                map.set(getKeyAFuc(a), a);
+            }
+
+            let getKeyBFuc: { (obj: B): any };
+            if (keyB.indexOf('.') < 0) {
+                getKeyBFuc = (obj: B) => obj[keyB];
+            } else {
+                let keys = keyB.split('.');
+                let fuc = ObjectUtils.getValueByKeyList;
+                getKeyBFuc = (obj: B) => fuc(obj, keys);
+            }
+            for (let i = listB.length - 1; i >= 0; --i) {
+                let b = listB[i];
+                let a = map.get(getKeyBFuc(b));
+                if (a) doMap.call(thisObj, a, b);
+            }
         }
     }
 }
