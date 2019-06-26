@@ -203,7 +203,8 @@ namespace Dream.common {
          * @param thisObj
          */
         static mapTwoList<A, B>(listA: A[], keyA: string, listB: B[], keyB: string, doMap: (a: A, b: B) => void, thisObj?: any) {
-            let map = new Map<any, A>();
+            let map = this._toolMap;
+            map.clear();
             let getKeyAFuc: { (obj: A): any };
             if (keyA.indexOf('.') < 0) {
                 getKeyAFuc = (obj: A) => obj[keyA];
@@ -231,5 +232,6 @@ namespace Dream.common {
                 if (a) doMap.call(thisObj, a, b);
             }
         }
+        private static _toolMap = new Map<any,any>();
     }
 }

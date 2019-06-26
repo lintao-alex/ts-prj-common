@@ -13,7 +13,7 @@ namespace Dream.common {
             return propertyList.some(name => obj.hasOwnProperty(name));
         }
 
-        static getValue(obj: any, key: string){
+        static getValue(obj: any, key: string) {
             return obj[key];
         }
 
@@ -79,6 +79,28 @@ namespace Dream.common {
                     this.walkObj(value, dealFuc, callObj);
                 }
             }
+        }
+
+        /**
+         * 有不同则返回false，不同包括不同时包含的字段与不同值的字段
+         * @param objA
+         * @param objB
+         */
+        static deepCompare(objA: any, objB: any) {
+            let keysB = Object.keys(objB);
+            if (keysB.some(kb => !objA.hasOwnProperty(kb))) return false;
+
+            let keys = Object.keys(objA);
+            for (let i = keys.length - 1; i >= 0; --i) {
+                let key = keys[i];
+                if (!objB.hasOwnProperty(key)) return false;
+                let valueA = objA[key];
+                if (this.isBaseValue(valueA)) {
+                    if (valueA !== objB[key]) return false;
+                }
+                if (!this.deepCompare(valueA, objB[key])) return false;
+            }
+            return true;
         }
     }
 }
